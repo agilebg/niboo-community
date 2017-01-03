@@ -15,7 +15,11 @@ Create precise invoices by allowing employees to select a service product for ea
 This makes it possible to keep an overview on logged hours differentiated by seniority and pay grade.
         ''',
     'author': 'Niboo',
-    'depends': ['sale_timesheet', 'project_timesheet', 'hr_timesheet_sheet'],
+    'depends': [
+        'sale_timesheet',
+        'project_timesheet',
+        'hr_timesheet_sheet',
+    ],
     'data': [
         'views/project_task.xml',
     ],
