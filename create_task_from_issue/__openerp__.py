@@ -10,10 +10,11 @@
     'version': '9.0.1.0.0',
     'author': 'Niboo',
     'depends': [
-        'project_scrum',
+        'project_issue',
     ],
     'data': [
         'views/project_issue.xml',
+        'views/project_task.xml',
     ],
     'installable': True,
     'application': False,

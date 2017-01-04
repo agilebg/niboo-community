@@ -11,18 +11,19 @@ class ProjectIssue(models.Model):
     @api.multi
     def create_task(self):
         self.ensure_one()
-
-        current_sprint = self.env['project.sprint'].search([
-            ('is_current_sprint','=',True)
-        ])
-
-        task = self.env['project.task'].create({
-            'name': self.name,
-            'description': self.description,
-            'user_id': self._uid,
-            'project_id': self.project_id.id,
-            'sprint_id': current_sprint.id,
-            'identifier': "-",
-        })
-
-        self.task_id = task.id
+        user_id = self.user_id.id if self.user_id else self._uid
+        return {
+            'type': 'ir.actions.act_window',
+            'view_id': self.env.ref('project.view_task_form2').id,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'project.task',
+            'target': 'current',
+            'context': {
+                'default_project_id': self.project_id.id,
+                'default_issue_ids': [(4, self.id, False)],
+                'default_user_id': user_id,
+                'default_description': self.description,
+                'default_name': self.name,
+            }
+        }
