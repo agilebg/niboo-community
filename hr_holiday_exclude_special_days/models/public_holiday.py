@@ -23,9 +23,6 @@ class PublicHoliday(models.Model):
         employee_ids = self.env['hr.employee'].search(
             [('company_id', '=', self.company_id.id)])
         date_from, date_to = self.compensate_user_tz(self.date)
-        error_list = ''
-        exception_list = ''
-        message = ''
 
         values = {'name': self.name,
                   'type': 'remove',
@@ -54,29 +51,11 @@ class PublicHoliday(models.Model):
             try:
                 leave = HRHolidays.sudo().with_context(context).create(values)
                 leave.with_context(context).holidays_validate()
-            except Exception, e:
-                try:
-                    error_list = '%s- %s: %s\n' % (
-                        error_list, employee.name, str(e.name))
-                except:
-                    exception_list = '%s- %s\n' % (exception_list, e)
-
-        if exception_list:
-            message = \
-                '''The following unexpected errors occurred:
-                %sPlease contact the Administrator.
-                ----------
-                ''' % exception_list
-        if error_list:
-            message = \
-                '''%sThe leave entries could not be generated because of the following errors:
-
-                %s
-                Please resolve the problem for every concerned employee and try again.
-                ''' % (message, error_list)
-
-        if message:
-            raise exceptions.ValidationError(message)
+            except exceptions.ValidationError, e:
+                raise exceptions.ValidationError(
+                    'The leave entries could not be generated as the following '
+                    'error occurred:\n\n%s: %s' % (
+                    employee.name, e.name))
 
     @api.multi
     def remove_leaves(self):
