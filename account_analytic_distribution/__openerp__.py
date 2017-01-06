@@ -7,7 +7,7 @@
     'name': 'Multiple Analytic Distribution',
     'version': '9.0.1.0.0',
     'category': 'Accounting & Finance',
-    'License': 'AGPL-3',
+    'License': 'LGPL-3',
     'summary': 'Distribute your accounting move through multiple universe',
     'description': """
 With this module, you can allocate multiple times the same amount to different analytic account.

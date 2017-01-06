@@ -8,6 +8,7 @@
     'version': '9.0.1.0.0',
     'summary': 'Manage analytic accounting through multiple universe with the possibility to prepare distribution to reuse',
     'category': 'Accounting & Finance',
+    'license': 'LGPL-3',
     'description': """
 This module allows you to prepare plan for recurring distribution (like salary)
         """,

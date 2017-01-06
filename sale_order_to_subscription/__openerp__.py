@@ -9,7 +9,7 @@
     'summary': 'Creates subscriptions based on sale order',
     'website': 'https://www.niboo.be/',
     'version': '9.0.1.0.0',
-    'license': 'AGPL-3',
+    'license': 'LGPL-3',
     'description': """
 Creates subscriptions based on sale order, linked to the same analytic account
 as the sale order

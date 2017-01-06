@@ -7,7 +7,7 @@
     'summary': 'Manage analytic accounting through multiple companies',
     'version': '9.0.1.0.0',
     'category': 'Accounting & Finance',
-    'license': 'AGPL-3',
+    'license': 'LGPL-3',
     'description': '''
 Manage your analytic accounting for your multiple companies and universe in Odoo.
         ''',
