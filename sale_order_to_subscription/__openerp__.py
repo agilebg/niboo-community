@@ -21,7 +21,6 @@ as the sale order
     ],
     'data': [
         'data/sale_subscription.xml',
-        'views/sale_order.xml',
         'views/sale_subscription.xml',
         'views/account_invoice.xml',
     ],
