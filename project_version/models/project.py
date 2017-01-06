@@ -126,8 +126,6 @@ class ProjectTask(models.Model):
     _inherit = 'project.task'
 
     version_id = fields.Many2one('project.version', 'Version')
-    requires_version = fields.Boolean('Requires Version',
-                                      related='project_id.requires_version')
 
     @api.multi
     @api.constrains('version_id')
