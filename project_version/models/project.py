@@ -5,12 +5,6 @@
 from openerp import api, exceptions, fields, models
 
 
-class ProjectProject(models.Model):
-    _inherit = 'project.project'
-
-    requires_version = fields.Boolean('Requires Version', default=True)
-
-
 class ProjectVersion(models.Model):
     _name = 'project.version'
     _order = 'major desc'
