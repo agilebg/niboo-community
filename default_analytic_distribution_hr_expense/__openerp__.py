@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # © 2016 Pierre Faniel
 # © 2016 Niboo SPRL (<https://www.niboo.be/>)
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 {
     'name': 'Analytic Distribution - Default By Employee',
     'category': 'Accounting & Finance',
@@ -20,6 +20,9 @@ distribution on his expenses.
     ],
     'data': [
         'views/hr_employee.xml',
+    ],
+    'images': [
+    'static/description/cover.png'
     ],
     'installable': True,
     'application': False,

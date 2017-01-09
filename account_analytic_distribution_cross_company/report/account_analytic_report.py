@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # © 2015 Samuel Lefever
 # © 2015 Niboo SPRL (<https://www.niboo.be/>)
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from openerp import fields, models, tools
 
