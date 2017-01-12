@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_uom_categ_surface" model="product.uom.categ">
+            <field name="name">Surface</field>
+        </record>
+        <record id="product_uom_m2" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_surface"/>
+            <field name="name">m2</field>
+            <field name="factor" eval="1"/>
+            <field name="rounding" eval="0.001"/>
+        </record>
+        <record id="product_uom_cm2" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_surface"/>
+            <field name="name">cm2</field>
+            <field name="factor" eval="10000"/>
+            <field name="uom_type">smaller</field>
+            <field name="rounding" eval="0.01"/>
+        </record>
+        <record id="product_uom_mm2" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_surface"/>
+            <field name="name">mm2</field>
+            <field name="factor" eval="1000000"/>
+            <field name="uom_type">smaller</field>
+            <field name="rounding" eval="0.1"/>
+        </record>
+        <record id="product_uom_sqyd" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_surface"/>
+            <field name="name">sq yd</field>
+            <field name="factor" eval="1.1959906"/>
+            <field name="uom_type">smaller</field>
+            <field name="rounding" eval="0.01"/>
+        </record>
+        <record id="product_uom_sqft" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_surface"/>
+            <field name="name">sq ft</field>
+            <field name="factor" eval="10.7639104"/>
+            <field name="uom_type">smaller</field>
+            <field name="rounding" eval="0.01"/>
+        </record>
+        <record id="product_uom_sqin" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_surface"/>
+            <field name="name">sq in</field>
+            <field name="factor" eval="1550.0031"/>
+            <field name="uom_type">smaller</field>
+            <field name="rounding" eval="0.01"/>
+        </record>
+    </data>
+</odoo>
