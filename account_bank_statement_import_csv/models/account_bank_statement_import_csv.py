@@ -3,14 +3,13 @@
 # © 2016 Niboo SPRL (https://www.niboo.be/), Be-Cloud
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
-import base64
 import codecs
 import hashlib
 import logging
 import StringIO
 
 import dateutil.parser
-from openerp import _, api, exceptions, fields, models
+from openerp import _, exceptions, models
 
 try:
     import unicodecsv
@@ -76,7 +75,7 @@ class AccountBankStatementImport(models.TransientModel):
                         for statement in account_statements:
                             if statement.get('name') == line['Account'] + '-' \
                                     + line['Statement number']:
-                                # There is already a statement with this number,
+                                # There is already a statement with this number
                                 # add the transaction
                                 if not statement.get('date') \
                                      or entry_date_obj > statement.get('date'):
@@ -85,8 +84,8 @@ class AccountBankStatementImport(models.TransientModel):
                                 processed = True
                                 break
                         if not processed:
-                            # There is no statement with this number, create one
-                            # with this transaction
+                            # There is no statement with this number, create
+                            # one with this transaction
                             statement = {
                                 'name': line['Account'] + '-' + line[
                                     'Statement number'],

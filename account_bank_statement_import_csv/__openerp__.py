@@ -10,8 +10,8 @@
     'website': 'https://www.niboo.be/',
     'version': '9.0.1.0.0',
     'license': 'AGPL-3',
-    'author': 'Samuel Lefever (Niboo SPRL), Jerome Sonnet (Be-Cloud)',
-    'description' : """
+    'author': 'Niboo, Be-Cloud',
+    'description': """
 This module allows you to import the machine readable CSV Files from Luxembourg in Odoo: they are parsed and stored in human readable format in
 Accounting / Bank and Cash / Bank Statements.
 
@@ -19,10 +19,17 @@ Bank Statements may be generated containing a subset of the CSV information (tak
 creation of the Financial Accounting records). 
     
     """,
-    'data': ['views/account_csv.xml'],
-    'depends': ['account_bank_statement_import'],
+    'data': [
+        'views/account_csv.xml',
+    ],
+    'depends': [
+        'account_bank_statement_import',
+    ],
     'external_dependencies': {
-        'python': ['unicodecsv', 'chardet']
+        'python': [
+            'unicodecsv',
+            'chardet',
+        ]
     },
     'images': [
         'static/description/account_bank_statement_import_csv_cover.png',
