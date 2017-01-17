@@ -11,8 +11,43 @@ class PublicHoliday(models.Model):
     _name = "hr.public_holiday"
 
     date = fields.Date("Public Holiday Date", required=True)
-    company_id = fields.Many2one('res.company', string="Company", required=True)
     name = fields.Char(string="Holiday Name", required=True)
+
+    allocation_type = fields.Selection([
+        ('tags', 'By Employee Tags'),
+        ('employee', 'By Employee'),
+        ('company', 'By Company'),
+    ], string='Allocation Type', default='company')
+
+    company_ids = fields.Many2many('res.company', string="Companies",
+                                   required=False)
+    tag_ids = fields.Many2many('hr.employee.category', string="Tags",
+                                   required=False)
+    employee_ids = fields.Many2many('hr.employee', string="Impacted Employees",
+                                   required=True)
+
+    @api.onchange('allocation_type')
+    def _onchange_type(self):
+        self.employee_ids = False
+
+        if self.allocation_type != 'company':
+            self.company_ids = False
+        elif self.allocation_type != 'tags':
+            self.tag_ids = False
+
+    @api.onchange('tag_ids')
+    def _onchange_tag(self):
+        employee_with_tags = self.env['hr.employee'].search([
+            ('category_ids', 'in', self.tag_ids.ids)
+        ])
+        self.employee_ids = employee_with_tags.ids
+
+    @api.onchange('company_ids')
+    def _onchange_function(self):
+        employees_in_company = self.env['hr.employee'].search([
+            ('company_id', 'in', self.company_ids.ids)
+        ])
+        self.employee_ids = employees_in_company.ids
 
     @api.multi
     def create_leaves(self):
@@ -20,8 +55,6 @@ class PublicHoliday(models.Model):
         HRHolidays = self.env['hr.holidays']
         holiday_status_id = self.env['hr.holidays.status'].search(
             [('is_public_holiday', '=', True)], limit=1)
-        employee_ids = self.env['hr.employee'].search(
-            [('company_id', '=', self.company_id.id)])
         date_from, date_to = self.compensate_user_tz(self.date)
 
         values = {'name': self.name,
@@ -46,7 +79,7 @@ class PublicHoliday(models.Model):
                    'mail_notrack': True,
                    'tracking_disable': True}
 
-        for employee in employee_ids:
+        for employee in self.employee_ids:
             values['employee_id'] = employee.id
             try:
                 leave = HRHolidays.sudo().with_context(context).create(values)
@@ -64,13 +97,11 @@ class PublicHoliday(models.Model):
         holiday_status_id = self.env['hr.holidays.status'].search(
             [('is_public_holiday', '=', True)])
         date_from, date_to = self.compensate_user_tz(self.date)
-        employee_ids = self.env['hr.employee'].search(
-            [('company_id', '=', self.company_id.id)])
         holiday_ids = self.env['hr.holidays'].search(
             [('holiday_status_id', '=', holiday_status_id.id),
              ('date_from', '>=', date_from),
              ('date_to', '<=', date_to),
-             ('employee_id', 'in', employee_ids.ids)])
+             ('employee_id', 'in', self.employee_ids.ids)])
 
         if self.env.user.has_group('base.group_configuration') \
                 or self.env.user.has_group('base.group_hr_manager'):
