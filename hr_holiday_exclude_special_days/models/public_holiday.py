@@ -13,41 +13,24 @@ class PublicHoliday(models.Model):
     date = fields.Date("Public Holiday Date", required=True)
     name = fields.Char(string="Holiday Name", required=True)
 
-    allocation_type = fields.Selection([
-        ('tags', 'By Employee Tags'),
-        ('employee', 'By Employee'),
-        ('company', 'By Company'),
-    ], string='Allocation Type', default='company')
-
     company_ids = fields.Many2many('res.company', string="Companies",
                                    required=False)
     tag_ids = fields.Many2many('hr.employee.category', string="Tags",
                                    required=False)
     employee_ids = fields.Many2many('hr.employee', string="Impacted Employees",
-                                   required=True)
+                                   required=True, readonly=True)
 
-    @api.onchange('allocation_type')
-    def _onchange_type(self):
+    @api.onchange('tag_ids', 'company_ids')
+    def _onchange_filter(self):
         self.employee_ids = False
 
-        if self.allocation_type != 'company':
-            self.company_ids = False
-        elif self.allocation_type != 'tags':
-            self.tag_ids = False
+        domain = []
+        if self.tag_ids:
+            domain.append(('category_ids', 'in', self.tag_ids.ids))
+        if self.company_ids:
+            domain.append(('company_id', 'in', self.company_ids.ids))
 
-    @api.onchange('tag_ids')
-    def _onchange_tag(self):
-        employee_with_tags = self.env['hr.employee'].search([
-            ('category_ids', 'in', self.tag_ids.ids)
-        ])
-        self.employee_ids = employee_with_tags.ids
-
-    @api.onchange('company_ids')
-    def _onchange_function(self):
-        employees_in_company = self.env['hr.employee'].search([
-            ('company_id', 'in', self.company_ids.ids)
-        ])
-        self.employee_ids = employees_in_company.ids
+        self.employee_ids = self.env['hr.employee'].search(domain)
 
     @api.multi
     def create_leaves(self):

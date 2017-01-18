@@ -22,9 +22,8 @@
                             <field name="name" />
                         </group>
                         <group>
-                            <field name="allocation_type"/>
-                            <field name="company_ids" widget="many2many_tags" attrs="{'invisible': [('allocation_type', '!=', 'company')]}" />
-                            <field name="tag_ids" widget="many2many_tags" attrs="{'invisible': [('allocation_type', '!=', 'tags')]}"/>
+                            <field name="company_ids" widget="many2many_tags" />
+                            <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                         <group>
                             <field name="employee_ids" widget="many2many_tags" />
