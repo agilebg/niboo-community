@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hs_code_form" model="ir.ui.view">
+        <field name="name">hs.code.form</field>
+        <field name="model">hs.code</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h1>
+                        <field nolabel="1" name="name" placeholder="Name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="description"/>
+                            <field name="hs_group_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hs_code_tree" model="ir.ui.view">
+        <field name="name">hs.code.tree</field>
+        <field name="model">hs.code</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="description"/>
+                <field name="hs_group_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hs_code_search" model="ir.ui.view">
+        <field name="name">hs.code.search</field>
+        <field name="model">hs.code</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="hs_group_id"/>
+                <filter name="hs_group" string="HS Group" context="{'group_by': 'hs_group_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <act_window id="hs_code_action"
+                name="HS Codes"
+                res_model="hs.code"
+                view_mode="tree,form"
+                view_type="form"/>
+
+    <menuitem id="hs_code_menu" name="HS Codes" parent="sale.prod_config_main"
+              action="hs_code_action" sequence="10"/>
+</odoo>

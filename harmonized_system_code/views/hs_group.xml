@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hs_group_form" model="ir.ui.view">
+        <field name="name">hs.group.form</field>
+        <field name="model">hs.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h1>
+                        <field nolabel="1" name="name" placeholder="Name"/>
+                    </h1>
+                    <group>
+                        <field name="country_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                    <label for="hs_code_ids"/>
+                    <field name="hs_code_ids"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hs_group_tree" model="ir.ui.view">
+        <field name="name">hs.group.tree</field>
+        <field name="model">hs.group</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hs_group_search" model="ir.ui.view">
+        <field name="name">hs.group.search</field>
+        <field name="model">hs.group</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="country_ids"/>
+                <field name="hs_code_ids"/>
+            </search>
+        </field>
+    </record>
+
+    <act_window id="hs_group_action"
+                name="HS Groups"
+                res_model="hs.group"
+                view_mode="tree,form"
+                view_type="form"/>
+
+    <menuitem id="hs_group_menu" name="HS Groups" parent="sale.prod_config_main"
+              action="hs_group_action" sequence="15"/>
+</odoo>
