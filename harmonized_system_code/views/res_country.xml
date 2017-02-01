@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_country_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='phone_code']" position="after">
-                <field name="hs_group_id"/>
+                <field name="hs_group_ids" widget="many2many_tags"/>
             </xpath>
         </field>
     </record>

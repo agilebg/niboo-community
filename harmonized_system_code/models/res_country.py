@@ -8,4 +8,5 @@ from odoo import fields, models
 class ResCountry(models.Model):
     _inherit = 'res.country'
 
-    hs_group_id = fields.Many2one('hs.group', 'HS Group')
+    hs_group_ids = fields.Many2many('hs.group', 'hs_group_country_rel',
+                                    'country_id', 'group_id', 'HS Groups')

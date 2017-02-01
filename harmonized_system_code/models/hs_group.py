@@ -11,5 +11,5 @@ class HSGroup(models.Model):
 
     name = fields.Char('Name', required=True)
     hs_code_ids = fields.One2many('hs.code', 'hs_group_id', 'HS Codes')
-    country_ids = fields.One2many('res.country', 'hs_group_id', 'Countries',
-                                  domain=[('hs_group_id', '=', False)])
+    country_ids = fields.Many2many('res.country', 'hs_group_country_rel',
+                                   'group_id', 'country_id', 'Countries')
