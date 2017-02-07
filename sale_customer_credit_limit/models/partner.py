@@ -9,17 +9,16 @@ from odoo import api, exceptions, fields, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-
     credit_limit = fields.Monetary(string='Credit Limit',
-                                   default=lambda self: self.get_credit_limit_default(),
+                                   default=lambda
+                                       self: self.get_default_credit_limit(),
                                    help='Total amount this customer is allowed '
                                         'to purchase on credit.')
 
     @api.model
-    def get_credit_limit_default(self):
-        credit_limit_default = self.env['ir.values'].get_default('sale.config.settings',
-                                                       'credit_limit_default')
-        return credit_limit_default
+    def get_default_credit_limit(self):
+        return self.env['ir.values'].get_default('sale.config.settings',
+                                                 'default_credit_limit')
 
     @api.constrains('credit_limit')
     @api.onchange('credit_limit')

@@ -21,10 +21,12 @@ pre-defined credit limit for this customer.
     'depends': [
         'account',
         'website_sale',
+        'hr',
     ],
     'data': [
         'views/partner_view.xml',
         'views/sale_view.xml',
+        'wizards/credit_limit_wizard.xml',
         'templates/assets.xml',
     ],
     'qweb' : [
