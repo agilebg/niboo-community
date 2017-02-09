@@ -10,59 +10,89 @@ class SaleCustomerCreditLimitWizard(models.TransientModel):
     _name = 'sale.customer.credit.limit.wizard'
 
     sale_order = fields.Many2one('sale.order', compute='get_vals')
-    currency_id = fields.Many2one('res.currency', string='Currency',
-                                  compute='get_vals')
-    customer_id = fields.Many2one('res.partner', 'Customer', compute='get_vals')
-    credit_limit = fields.Monetary('Credit Limit', compute='get_vals',
-                                   currency_field='currency_id')
-    open_credit = fields.Monetary('Unpaid Invoices', compute='get_vals',
-                                  currency_field='currency_id')
-    order_amount = fields.Monetary('Order Amount', compute='get_vals',
-                                   currency_field='currency_id')
+    company_currency_id = fields.Many2one('res.currency',
+                                          related='sale_order.company_id.currency_id',
+                                          readonly=1)
+    partner_id = fields.Many2one('res.partner', related='sale_order.partner_id',
+                                 readonly=1)
+    credit_limit = fields.Monetary('Credit Limit',
+                                   related='sale_order.partner_id.credit_limit',
+                                   readonly=1,
+                                   currency_field='company_currency_id')
+    order_amount = fields.Monetary('Order Amount',
+                                   related='sale_order.amount_total',
+                                   readonly=1,
+                                   currency_field='company_currency_id')
+
+    open_credit = fields.Monetary('Overdue Invoices', compute='get_vals',
+                                  currency_field='company_currency_id')
     exceeded_credit = fields.Monetary('Exceeded Credit', compute='get_vals',
-                                      currency_field='currency_id')
+                                      currency_field='company_currency_id')
 
     @api.multi
-    @api.depends('currency_id')
+    @api.depends('company_currency_id')
     def get_vals(self):
         self.ensure_one()
+        self.sale_order = self.env['sale.order'].browse(
+            self._context['active_id'])
+
         vals = self._context.get('credit')
-        self.sale_order = vals.get('sale_order')
-        self.customer_id = vals.get('customer')
-        self.currency_id = vals.get('currency')
-        self.credit_limit = vals.get('credit_limit')
         self.open_credit = vals.get('open_credit')
-        self.order_amount = vals.get('order_amount')
         self.exceeded_credit = vals.get('exceeded_credit')
 
     @api.multi
     def action_exceed_limit(self):
         self.ensure_one()
         order = self.sale_order
-        is_manager = self.env.user.has_group('sales_team.group_sale_manager')
+        is_manager = self.env.user.has_group('sales_team.group_sale_manager') \
+                     or order.user_id.employee_id.parent_id == self.user
         if is_manager:
             # Skip approval process for Sale Managers
-            order.state = 'sale'
+            context = {'exceed_credit_limit': True}
+            order.with_context(context).action_confirm()
         else:
             # Set order 'To Approve' and notify manager
             order.state = 'approve'
 
-            employee = self.env['hr.employee'].search([('user_id', '=', order.user_id.id)], limit=1)
+            employee = self.env['hr.employee'].search(
+                [('user_id', '=', order.user_id.id)], limit=1)
 
+            if not employee:
+                raise exceptions.ValidationError(
+                    'The user %s has no employee defined.' % order.user_id.name)
             if not employee.parent_id:
-                raise exceptions.ValidationError('The employee %s has no manager defined.' % employee.name)
+                raise exceptions.ValidationError(
+                    'The employee %s has no manager defined.' % employee.name)
+
             order.message_subscribe([employee.parent_id.id])
+
+            credit_limit = '%.2f' % self.credit_limit
+            open_credit = '%.2f' % self.open_credit
+            order_amount = '%.2f' % self.order_amount
+            exceeded_credit = '%.2f' % self.exceeded_credit
+            symbol = self.company_currency_id.symbol
+
             subject = '%s needs approval' % order.name
             message = '''
-            The Sale Order %s exceeds the customer credit limit and needs approval by %s:\n
-            Customer: %s\n
-            Currency: %s\n
-            Credit Limit: %s\n
-            Order Amount: %s\n
-            Exceeded Credit: %s\n
-            ''' % (order.name, employee.parent_id.name, self.customer_id.name, self.currency_id.name, self.credit_limit,
-                   self.order_amount, self.exceeded_credit)
+            The Sale Order %s exceeds the customer credit limit and needs approval by %s:
+            <ul>
+                <li>Customer: %s</li>
+                <li>Credit Limit: %s %s</li>
+                <li>Unpaid Invoices: %s %s</li>
+                <li>Order Amount: %s %s</li>
+                <li>Exceeded Credit: <span style="color:red">%s %s</span</li>
+            </ul>
+            ''' % (order.name, employee.parent_id.name,
+                   self.partner_id.name,
+                   credit_limit, symbol,
+                   open_credit, symbol,
+                   order_amount, symbol,
+                   exceeded_credit, symbol)
 
-            order.message_post(message, subject=subject, subtype='mail.mt_comment',
-                                       type='comment')
+            order.message_post(message, subject=subject,
+                               subtype='mail.mt_comment',
+                               type='comment')
 
+    def approve(self):
+        # Approve Sale Order
+        pass

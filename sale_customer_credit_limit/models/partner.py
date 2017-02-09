@@ -11,14 +11,9 @@ class ResPartner(models.Model):
 
     credit_limit = fields.Monetary(string='Credit Limit',
                                    default=lambda
-                                       self: self.get_default_credit_limit(),
+                                       self: self.company_id.default_credit_limit,
                                    help='Total amount this customer is allowed '
                                         'to purchase on credit.')
-
-    @api.model
-    def get_default_credit_limit(self):
-        return self.env['ir.values'].get_default('sale.config.settings',
-                                                 'default_credit_limit')
 
     @api.constrains('credit_limit')
     @api.onchange('credit_limit')
