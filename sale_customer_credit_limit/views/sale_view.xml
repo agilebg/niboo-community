@@ -21,8 +21,9 @@
                 <attribute name="states">cancel,approve</attribute>
             </xpath>
             <xpath expr="//header/button[@name='action_draft']" position="before">
-                <!-- TODO show approve only to managers -->
-                <button name="approve" states="approve" type="object" string="Approve" class="btn-primary"/>
+                <field name="user_is_manager" invisible="1"/>
+                <button name="action_approve" states="approve" type="object" string="Approve" class="btn-primary"
+                        attrs="{'invisible': ['|', ('user_is_manager','=',False)]}"/>
             </xpath>
         </field>
     </record>

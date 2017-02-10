@@ -44,9 +44,7 @@ class SaleCustomerCreditLimitWizard(models.TransientModel):
     def action_exceed_limit(self):
         self.ensure_one()
         order = self.sale_order
-        is_manager = self.env.user.has_group('sales_team.group_sale_manager') \
-                     or order.user_id.employee_id.parent_id == self.user
-        if is_manager:
+        if order.user_is_manager:
             # Skip approval process for Sale Managers
             context = {'exceed_credit_limit': True}
             order.with_context(context).action_confirm()
@@ -56,13 +54,6 @@ class SaleCustomerCreditLimitWizard(models.TransientModel):
 
             employee = self.env['hr.employee'].search(
                 [('user_id', '=', order.user_id.id)], limit=1)
-
-            if not employee:
-                raise exceptions.ValidationError(
-                    'The user %s has no employee defined.' % order.user_id.name)
-            if not employee.parent_id:
-                raise exceptions.ValidationError(
-                    'The employee %s has no manager defined.' % employee.name)
 
             order.message_subscribe([employee.parent_id.id])
 
@@ -78,7 +69,7 @@ class SaleCustomerCreditLimitWizard(models.TransientModel):
             <ul>
                 <li>Customer: %s</li>
                 <li>Credit Limit: %s %s</li>
-                <li>Unpaid Invoices: %s %s</li>
+                <li>Overdue Invoices: %s %s</li>
                 <li>Order Amount: %s %s</li>
                 <li>Exceeded Credit: <span style="color:red">%s %s</span</li>
             </ul>
@@ -92,7 +83,3 @@ class SaleCustomerCreditLimitWizard(models.TransientModel):
             order.message_post(message, subject=subject,
                                subtype='mail.mt_comment',
                                type='comment')
-
-    def approve(self):
-        # Approve Sale Order
-        pass

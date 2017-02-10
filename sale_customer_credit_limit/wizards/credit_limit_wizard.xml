@@ -15,7 +15,7 @@
                     <field name="exceeded_credit" style="color: red;" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
                 </group>
                 <group>
-                    <span>Please wait until open invoices have been paid or choose to exceed the credit limit (requires manager approval)</span>
+                    <span>Please wait until overdue invoices have been paid or choose to exceed the credit limit (requires manager approval)</span>
                 </group>
                 <footer>
                     <button string="Cancel" special="cancel" class="oe_highlight"/>

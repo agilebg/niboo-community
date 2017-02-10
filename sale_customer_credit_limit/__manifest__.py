@@ -9,13 +9,13 @@
     'summary': 'Define credit limits for each customer',
     'website': '',
     'version': '10.0.1.0',
+    'license': 'AGPL-3',
     'description': """
 - Define a credit limit on the partner
-- On the SaleOrder, if the amount + open invoices exceeds credit limit, the
+- On the SaleOrder, if the amount + overdue invoices exceeds the limit, the
 Order will need approval from the Sales Manager
 - On the webshop, customers will not be able to purchase further products via
-wire transfer, if the open invoices plus the current order exceed the
-pre-defined credit limit for this customer.
+wire transfer, if the open invoices plus the current order exceed the limit
         """,
     'author': 'Niboo',
     'depends': [
@@ -32,6 +32,9 @@ pre-defined credit limit for this customer.
     'qweb' : [
     ],
     'demo': [
+    ],
+    'images': [
+        'static/description/hr_contractor_cover.png',
     ],
     'installable': True,
     'application': False,
