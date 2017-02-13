@@ -10,8 +10,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     credit_limit = fields.Monetary(string='Credit Limit',
-                                   default=lambda
-                                       self: self.company_id.default_credit_limit,
+                                   default=lambda self: self.env.user.company_id.default_credit_limit,
                                    help='Total amount this customer is allowed '
                                         'to purchase on credit.')
 

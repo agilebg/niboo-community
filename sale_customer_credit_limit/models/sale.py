@@ -43,20 +43,20 @@ class SaleOrder(models.Model):
         manager_group = 'sales_team.group_sale_manager'
         for order in self:
             employee = self.env['hr.employee'].search([('user_id', '=', order.user_id.id)], limit=1)
-            if not employee:
-                raise exceptions.ValidationError(
-                    'The user %s has no employee defined. Please contact '
-                    'the Administrator.' % order.user_id.name)
-            if not employee.parent_id:
-                raise exceptions.ValidationError(
-                    'The employee %s has no manager defined. Please contact '
-                    'the Administrator.' % employee.name)
-            manager = employee.parent_id.user_id
-            order.user_is_manager = manager == current_user \
-                                    or current_user.id == SUPERUSER_ID \
-                                    or current_user.has_group(manager_group)
-
-            print 'is_manager: %s' % order.user_is_manager
+            if current_user.id == SUPERUSER_ID:
+                order.user_is_manager = True
+            else:
+                if not employee:
+                    raise exceptions.ValidationError(
+                        'The user %s has no employee defined. Please contact '
+                        'the Administrator.' % order.user_id.name)
+                if not employee.parent_id:
+                    raise exceptions.ValidationError(
+                        'The employee %s has no manager defined. Please contact '
+                        'the Administrator.' % employee.name)
+                manager = employee.parent_id.user_id
+                order.user_is_manager = manager == current_user \
+                                        or current_user.has_group(manager_group)
 
     @api.multi
     def action_confirm(self):
