@@ -24,5 +24,5 @@ msgstr "<strong>Conditions générales de vente :</strong>"
 #: model:ir.ui.view,arch_db:terms_conditions.report_invoice_document
 msgid "By paying this, the customer confirms to have read and accepted the Terms and\n"
 "                            Conditions overleaf."
-msgstr "En payant la présente, le client reconnait avoir lu les conditions générales de vente au verso et marquer son accord quant à leurs applications."
+msgstr "En payant la présente, le client reconnait avoir lu les conditions générales de vente au verso et marque son accord quant à leurs applications."
 
