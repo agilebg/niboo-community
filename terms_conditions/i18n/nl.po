@@ -24,4 +24,4 @@ msgstr "<strong>Algemene Verkoopsvoorwaarden:</strong>"
 #: model:ir.ui.view,arch_db:terms_conditions.report_invoice_document
 msgid "By paying this, the customer confirms to have read and accepted the Terms and\n"
 "                            Conditions overleaf."
-msgstr "Algemene verkoopsvoorwaarden: de klant erkent kennis genomen te hebben alsmede akkoord te gaan met de algemene voorwaarden op de keerzijde."
+msgstr "De klant erkent kennis genomen te hebben alsmede akkoord te gaan met de algemene voorwaarden op de keerzijde."
